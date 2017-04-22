@@ -309,7 +309,7 @@ public class ShoppingCart {
         return a;
     }*/
 
-    public void updateCart(String isbn, int newQuantity, int type) {
+    public void updateCart(String isbn, int newQuantity, int type) { //updates the quantity of a book in the cart
         int changeInQuantity;
         Book a;
         String tempIsbn;
@@ -374,6 +374,10 @@ public class ShoppingCart {
         } catch (Exception e) {
             System.out.println("Error Updating Cart: " + e.getMessage());
         }
+    }
+    
+    public int size() { //returns size of cart array, numItemsInCart DOES NOT work for this
+        return cart.size();
     }
 }
 

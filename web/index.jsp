@@ -40,9 +40,8 @@
         <title>Shopping Cart</title>
     </head>
     <body>
-        <a href ="http://localhost:8080/BookstoreWebsite/shoppingCart.jsp"><img src="image/images/ksu (1).png" width = "300" height = "100" alt = "Kennesaw Logo"></a>
+        <a href ="http://localhost:8080/BookstoreWebsite2.0/shoppingCart.jsp"><img src="image/images/ksu (1).png" width = "300" height = "100" alt = "Kennesaw Logo"></a>
         <h1>Shopping Cart</h1>
-        <%@page import="shoppingcart.Book, shoppingcart.ShoppingCart"%>
         <table border="0">
             <tbody>
                 <tr>
@@ -133,8 +132,3 @@
         </table>
     </body>
 </html>
-        
-
-    
-
-
