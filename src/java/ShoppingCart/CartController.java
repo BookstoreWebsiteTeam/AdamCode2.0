@@ -12,6 +12,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import shoppingcart.ShoppingCart;
+import shoppingcart.Book;
 
 /**
  *
@@ -20,7 +23,30 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "CartController", urlPatterns = {"/CartController"})
 public class CartController extends HttpServlet {
 
-    
+    @Override
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {     
+        HttpSession session = request.getSession();
+        ShoppingCart cart = (ShoppingCart)session.getAttribute("cart");
+        String updateAction = request.getParameter("action");
+        String indexStr = request.getParameter("index");
+        int indexInt = Integer.parseInt(indexStr);
+        response.sendRedirect("http://localhost:8080/BookstoreWebsite2.0/shoppingCart.jsp");
+        
+        
+        if(updateAction != null && !updateAction.equals("")) {
+            if(updateAction.equals("Update")) {
+                String newQtyStr = request.getParameter("newQty"); //string for the newQuantity request
+                int newQtyInt = Integer.parseInt(newQtyStr);
+                Book a;
+                a = cart.getBook(indexInt);
+                String isbn = a.getIsbn();
+                int bookType = cart.getBookType(indexInt);
+                cart.updateCart(isbn, newQtyInt, bookType);
+            }
+        }
+        session.setAttribute("cart", cart);
+        response.sendRedirect("http://localhost:8080/BookstoreWebsite2.0/");
+    }
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -70,11 +96,6 @@ public class CartController extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
 
     /**
      * Returns a short description of the servlet.

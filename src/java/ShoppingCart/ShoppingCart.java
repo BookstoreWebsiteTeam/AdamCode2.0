@@ -17,13 +17,9 @@ public class ShoppingCart {
     private ArrayList<Book> cart = new ArrayList<>(); //used to store Book items in the shopping cart
     private ArrayList<Integer> bookType = new ArrayList<>(); //stores the type of book at the same index as it appears in cart
     private ArrayList<Integer> quantityInCart = new ArrayList<>(); //stores the quantity in the same index as it appears in cart
-    private ArrayList<Book> currentBookList = new ArrayList<>();
-    //private ObjectIO = new ObjectIO();
-    //private int[] bookType = new int[200]; //create a vector to store book type in so they are the same location as in the shopping cart
     private final double tax = .07; //this is the modifier for tax
     private final double shippingCost = 15.00; //this is the flat shipping cost to be applied to any order with physical books
     DecimalFormat df = new DecimalFormat("#.00"); //for formatting the totalPrice
-    //private Vector bookType = new Vector();
 
     public ShoppingCart() { //basic empty constructor. Creates an empty cart and sets variables to 0
         numItemsInCart = 0;
@@ -113,16 +109,16 @@ public class ShoppingCart {
     private void addShipping() { //adds shipping to the totalPrice
         totalPrice += shippingCost;
     }
-    
+
     public Book getBook(int index) {
         Book a = cart.get(index);
         return a;
     }
-    
+
     public int getBookType(int index) {
         return bookType.get(index);
     }
-    
+
     public int getBookQuantity(int index) {
         return quantityInCart.get(index);
     }
@@ -158,15 +154,8 @@ public class ShoppingCart {
         //adds the book passed to the method to the end of the array list. Will by default add one book,
         //but can add as many books as specified. This will also check to see if the book is an ebook,
         // and will adjust the shipping if needed.
-        /*if(ebook && onlyEbook == true) {
-        } else if(ebook && onlyEbook == false) {
-            
-        } else if(ebook == false && onlyEbook == true) {
-            setEbookValue(ebook);
-            addShipping();
-        }*/
         double tempPrice;
-        switch (type) {
+        switch (type) { //for price tracking
             case 1:
                 tempPrice = newBook.getNewPrice();
                 subtotalPrice += tempPrice * quantity;
@@ -257,17 +246,19 @@ public class ShoppingCart {
     }
 
     public void removeFromCart(String ISBN, int type) {
+        //ISBN sent must be type String, and type is 1 = new, 2 = used, 3 = rental, 4 = ebook
+        //deletes the book from the cart if the book in the cart is of the same type (ebook, rental, etc.)
         Book a;
         String bookISBN;
         int tempType;
         double tempPrice;
         try {
-            for (int i = 0; i < cart.size(); i++) {
+            for (int i = 0; i < cart.size(); i++) { //iterates through cart
                 a = cart.get(i);
                 bookISBN = a.getIsbn();
-                if (bookISBN.equals(ISBN)) {
-                    if (bookType.get(i) == type) {
-                        switch (type) {
+                if (bookISBN.equals(ISBN)) { //checks to see if the book in the cart is the one it's looking for
+                    if (bookType.get(i) == type) { //checks to see if the found book is also the same type as the one it's looking for
+                        switch (type) { //this is all for the price tracking with the different types.
                             case 1:
                                 tempPrice = a.getNewPrice();
                                 subtotalPrice -= tempPrice * quantityInCart.get(i);
@@ -288,10 +279,10 @@ public class ShoppingCart {
                             default:
                                 break;
                         }
-                        cart.remove(i);
-                        bookType.remove(i);
+                        cart.remove(i); //remove book from cart
+                        bookType.remove(i); //remove the type from the same index
                         numItemsInCart -= quantityInCart.get(i);
-                        quantityInCart.remove(i);
+                        quantityInCart.remove(i); //remove the quantity of that book from the same index
                     }
                 }
             }
@@ -300,28 +291,23 @@ public class ShoppingCart {
         }
     }
 
-    /*public void updateCurrentBookList() {
-        currentBookList = reimport();
-    }*/
- /*public Book printBook(int index) {
-        Book a;
-        a = cart.get(index);
-        return a;
-    }*/
-
     public void updateCart(String isbn, int newQuantity, int type) { //updates the quantity of a book in the cart
+
         int changeInQuantity;
         Book a;
         String tempIsbn;
         double tempPrice;
+
         try {
-            for (int i = 0; i < cart.size(); i++) {
+            for (int i = 0; i < cart.size(); i++) { //iterates through the cart
+
                 a = cart.get(i);
                 tempIsbn = a.getIsbn();
-                if (isbn.equals(tempIsbn)) {
-                    if (bookType.get(i) == type) {
-                        switch (type) {
-                            case 1:
+
+                if (isbn.equals(tempIsbn)) { //looks for the specific book in the array
+                    if (bookType.get(i) == type) { //then makes sure the book in the cart is the same type as the book it's looking for (ebook, rental, etc.)
+                        switch (type) { //switch for all the different book types
+                            case 1: //new
                                 if (a.getNewQuantity() >= newQuantity) {
                                     changeInQuantity = newQuantity - quantityInCart.get(i);
                                     quantityInCart.set(i, newQuantity);
@@ -332,7 +318,7 @@ public class ShoppingCart {
                                     System.out.println("Unable to add book to cart, new quantity is invalid. Please select a number at or below " + a.getNewQuantity());
                                 }
                                 break;
-                            case 2:
+                            case 2: //used
                                 if (a.getUsedQuantity() >= newQuantity) {
                                     changeInQuantity = newQuantity - quantityInCart.get(i);
                                     quantityInCart.set(i, newQuantity);
@@ -343,7 +329,7 @@ public class ShoppingCart {
                                     System.out.println("Unable to add book to cart, new quantity is invalid. Please select a number at or below " + a.getUsedQuantity());
                                 }
                                 break;
-                            case 3:
+                            case 3: //rental
                                 if (a.getRentalQuantity() >= newQuantity) {
                                     changeInQuantity = newQuantity - quantityInCart.get(i);
                                     quantityInCart.set(i, newQuantity);
@@ -354,7 +340,7 @@ public class ShoppingCart {
                                     System.out.println("Unable to add book to cart, new quantity is invalid. Please select a number at or below " + a.getRentalQuantity());
                                 }
                                 break;
-                            case 4:
+                            case 4: //ebook
                                 if (a.getEbookQuantity() >= newQuantity) {
                                     changeInQuantity = newQuantity - quantityInCart.get(i);
                                     quantityInCart.set(i, newQuantity);
@@ -365,7 +351,7 @@ public class ShoppingCart {
                                     System.out.println("Unable to add book to cart, new quantity is invalid. Please select a number at or below " + a.getEbookQuantity());
                                 }
                                 break;
-                            default:
+                            default: //do nothing
                                 break;
                         }
                     }
@@ -375,7 +361,7 @@ public class ShoppingCart {
             System.out.println("Error Updating Cart: " + e.getMessage());
         }
     }
-    
+
     public int size() { //returns size of cart array, numItemsInCart DOES NOT work for this
         return cart.size();
     }
